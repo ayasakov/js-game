@@ -1,9 +1,13 @@
 "use strict";
 
 function Game() {
+  this.square = 12;
   this.canvasWidth = 450;
   this.canvasHeight = 450;
   this.score = 0;
+
+  this.snakeHeadColor = '#aa0000';
+  this.snakeBodyColor = '#789';
 
   this.status = 1;
   this.STATUS = {
@@ -20,8 +24,14 @@ function Game() {
 
   document.body.appendChild(this.canvas);
 
+  this.scaleWidth = Math.ceil(this.canvasWidth / this.square);
+	this.scaleHeight = Math.ceil(this.canvasHeight / this.square);
+
   // Context
   this.context = this.canvas.getContext('2d');
+
+  // Snake
+  this.snake = new Snake(this);
 }
 
 Game.prototype.init = function () {
@@ -29,17 +39,15 @@ Game.prototype.init = function () {
 };
 
 Game.prototype.reset = function () {
-  this.score = 0;
-};
+  this.snake = new Snake(this);
 
-Game.prototype.getStatus = function () {
-  return this.status;
+  this.score = 0;
 };
 
 Game.prototype.drawMessage = function (title, description) {
   // Background
   this.context.beginPath();
-  this.context.fillStyle = 'rbga(0, 0, 0, 0.5)';
+  this.context.fillStyle = 'rgba(0, 0, 0, 0.8)';
   this.context.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
   this.context.closePath();
 
@@ -58,9 +66,19 @@ Game.prototype.drawMessage = function (title, description) {
   this.context.fillText(description, this.canvasWidth / 2, this.canvasHeight - 32);
 };
 
+Game.prototype.update = function() {
+	if (this.getStatus() == this.STATUS.PLAY) {
+		//this.snake.update();
+	}
+
+  pressKey.isLock = false;
+};
+
 Game.prototype.render = function () {
-  this.context.fillStyle = 'rbga(0, 0, 0, 0.5)';
+  this.context.fillStyle = 'rgba(0, 0, 0, 0.5)';
   this.context.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
+
+  this.snake.render();
 
   switch (this.getStatus()) {
     case this.STATUS.PLAY:
@@ -79,7 +97,23 @@ Game.prototype.render = function () {
 Game.prototype.handlePressKey = function (event) {
   if (pressKey.isKey('SPACE')) {
     if (this.getStatus() == this.STATUS.NONE) {
-      
+      this.reset();
+      this.setStatus(this.STATUS.PLAY);
     }
   }
+};
+
+Game.prototype.setStatus = function(value) {
+	this.onStatusChange(value, this.status);
+	this.status = value;
+};
+
+Game.prototype.getStatus = function () {
+  return this.status;
+};
+
+Game.prototype.onStatusChange = function(newstatus, oldstatus) {
+	if (newstatus == this.STATUS.PLAY && oldstatus != this.STATUS.PAUSE) {
+		//this.    .create();
+	}
 };

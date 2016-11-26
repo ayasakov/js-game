@@ -5,10 +5,11 @@
 
   function init() {
     game.init();
-    main();
+    setInterval(main, 1000 / 6);
   }
 
   function main() {
+    game.update();
     game.render();
   }
 
