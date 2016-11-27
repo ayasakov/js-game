@@ -1,7 +1,7 @@
 "use strict";
 
 function Game() {
-  this.square = 24;
+  this.square = 15;
   this.canvasWidth = 450;
   this.canvasHeight = 450;
   this.score = 0;
@@ -32,6 +32,8 @@ function Game() {
 
   // Snake
   this.snake = new Snake(this);
+  // Eat
+  this.snake = new Eat(this);
 }
 
 Game.prototype.init = function () {
@@ -40,7 +42,7 @@ Game.prototype.init = function () {
 
 Game.prototype.reset = function () {
   this.snake = new Snake(this);
-
+  this.eat = new Eat(this);
   this.score = 0;
 };
 
@@ -79,6 +81,7 @@ Game.prototype.render = function () {
   this.context.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
 
   this.snake.render();
+  this.eat.render();
 
   switch (this.getStatus()) {
     case this.STATUS.PLAY:
@@ -130,6 +133,6 @@ Game.prototype.getStatus = function () {
 
 Game.prototype.onStatusChange = function(newstatus, oldstatus) {
 	if (newstatus == this.STATUS.PLAY && oldstatus != this.STATUS.PAUSE) {
-		//this.    .create();
+		this.eat.create();
 	}
 };
