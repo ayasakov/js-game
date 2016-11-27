@@ -1,7 +1,7 @@
 "use strict";
 
 function Game() {
-  this.square = 12;
+  this.square = 24;
   this.canvasWidth = 450;
   this.canvasHeight = 450;
   this.score = 0;
@@ -13,7 +13,7 @@ function Game() {
   this.STATUS = {
     NONE: 1,
     PLAY: 2,
-    STOP: 3
+    GAME_OVER: 3
   };
 
   // Canvas
@@ -68,7 +68,7 @@ Game.prototype.drawMessage = function (title, description) {
 
 Game.prototype.update = function() {
 	if (this.getStatus() == this.STATUS.PLAY) {
-		//this.snake.update();
+		this.snake.update();
 	}
 
   pressKey.isLock = false;
@@ -88,7 +88,7 @@ Game.prototype.render = function () {
       this.drawMessage('Змейка', 'Нажмите пробел для начала игры');
       break;
 
-    case this.status.STOP:
+    case this.STATUS.GAME_OVER:
       this.drawMessage('Конец игры', 'Нажмите пробел для начала игры');
       break;
   }
@@ -96,11 +96,27 @@ Game.prototype.render = function () {
 
 Game.prototype.handlePressKey = function (event) {
   if (pressKey.isKey('SPACE')) {
-    if (this.getStatus() == this.STATUS.NONE) {
+    if (this.getStatus() == this.STATUS.GAME_OVER) {
       this.reset();
+      this.setStatus(this.STATUS.PLAY);
+    } else if (this.getStatus() == this.STATUS.NONE) {
       this.setStatus(this.STATUS.PLAY);
     }
   }
+
+  if (this.getStatus() == this.STATUS.PLAY && !pressKey.isLock) {
+		pressKey.isLock = true;
+
+		if (pressKey.isKey('UP') && !this.snake.isRoute('DOWN')) {
+			this.snake.setRoute('UP');
+		} else if (pressKey.isKey('DOWN') && !this.snake.isRoute('UP')) {
+			this.snake.setRoute('DOWN');
+		} else if (pressKey.isKey('LEFT') && !this.snake.isRoute('RIGHT')) {
+			this.snake.setRoute('LEFT');
+		} else if (pressKey.isKey('RIGHT') && !this.snake.isRoute('LEFT')) {
+			this.snake.setRoute('RIGHT');
+		}
+	}
 };
 
 Game.prototype.setStatus = function(value) {
