@@ -57,6 +57,21 @@ Snake.prototype.update = function () {
 	this.body.pop();
 	this.body.unshift(newHeadSnake);
 
+  // Check eat
+  if (newHeadSnake.x == this.game.eat.position.x &&
+    newHeadSnake.y == this.game.eat.position.y) {
+    this.game.score++;
+    this.game.renderScore();
+
+    var isWin = this.addElement();
+    if (isWin) {
+      this.game.eat.remove();
+      this.game.setStatus(this.game.STATUS.GAME_WIN);
+    } else {
+      this.game.eat.create();
+    }
+  }
+
 };
 
 Snake.prototype.render = function () {
@@ -83,4 +98,32 @@ Snake.prototype.setRoute = function(value) {
 
 Snake.prototype.isRoute = function(value) {
 	return this.route == this.ROUTE[value];
+};
+
+Snake.prototype.addElement = function () {
+  var lastEl = this.body.length - 1,
+      newEl = {
+        x: this.body[lastEl].x,
+        y: this.body[lastEl].y
+      },
+      x_diff = this.body[lastEl].x - this.body[lastEl - 1].x,
+      y_diff = this.body[lastEl].y - this.body[lastEl - 1].y;
+
+  if (x_diff > 0) {
+    newEl.x += 1;
+  } else if (x_diff < 0) {
+    newEl.x -= 1;
+  } else if (y_diff > 0) {
+    newEl.y += 1;
+  } else if (y_diff < 0) {
+    newEl.y -= 1;
+  }
+
+  this.body.push(newEl);
+
+  if (this.getSize() == this.game.scaleWidth * this.game.scaleHeight) {
+    return true;
+  }
+
+  return false;
 };

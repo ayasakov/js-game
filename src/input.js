@@ -3,6 +3,7 @@
 (function () {
   var keys = {
     SPACE: 32,
+    SHIFT: 16,
     LEFT: 37,
     UP: 38,
     RIGHT: 39,

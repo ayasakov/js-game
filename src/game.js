@@ -13,7 +13,9 @@ function Game() {
   this.STATUS = {
     NONE: 1,
     PLAY: 2,
-    GAME_OVER: 3
+    GAME_OVER: 3,
+    GAME_WIN: 4,
+    PAUSE: 5
   };
 
   // Canvas
@@ -40,10 +42,22 @@ Game.prototype.init = function () {
   this.reset();
 };
 
+Game.prototype.renderScore = function () {
+  var scoreElement = document.getElementById('scores');
+  if (!scoreElement) {
+    scoreElement = document.createElement('span');
+    scoreElement.id = 'scores';
+    document.body.appendChild(document.createElement('br'));
+    document.body.appendChild(scoreElement);
+  }
+  scoreElement.textContent = 'SCORES: ' + this.score;
+};
+
 Game.prototype.reset = function () {
   this.snake = new Snake(this);
   this.eat = new Eat(this);
   this.score = 0;
+  this.renderScore();
 };
 
 Game.prototype.drawMessage = function (title, description) {
@@ -88,21 +102,42 @@ Game.prototype.render = function () {
       break;
 
     case this.STATUS.NONE:
-      this.drawMessage('Змейка', 'Нажмите пробел для начала игры');
+      this.drawMessage('Змейка..', 'Нажмите пробел для начала игры');
       break;
 
     case this.STATUS.GAME_OVER:
-      this.drawMessage('Конец игры', 'Нажмите пробел для начала игры');
+      this.drawMessage('Конец игры :(', 'Нажмите пробел для начала новой игры');
+      break;
+
+    case this.STATUS.GAME_WIN:
+      this.drawMessage('Победа!', 'Нажмите пробел для начала новой игры');
+      break;
+
+    case this.STATUS.PAUSE:
+      this.drawMessage('Пауза', 'Нажмите SHIFT или пробел для продолжения');
       break;
   }
 };
 
 Game.prototype.handlePressKey = function (event) {
   if (pressKey.isKey('SPACE')) {
-    if (this.getStatus() == this.STATUS.GAME_OVER) {
+    if (this.getStatus() == this.STATUS.GAME_OVER ||
+      this.getStatus() == this.STATUS.GAME_WIN) {
       this.reset();
       this.setStatus(this.STATUS.PLAY);
     } else if (this.getStatus() == this.STATUS.NONE) {
+      this.setStatus(this.STATUS.PLAY);
+    } else if (this.getStatus() == this.STATUS.PAUSE) {
+      this.setStatus(this.STATUS.PLAY);
+    } else if (this.getStatus() == this.STATUS.PLAY) {
+      this.setStatus(this.STATUS.PAUSE);
+    }
+  }
+
+  if (pressKey.isKey('SHIFT')) {
+    if (this.getStatus() == this.STATUS.PLAY) {
+      this.setStatus(this.STATUS.PAUSE);
+    } else if (this.getStatus() == this.STATUS.PAUSE) {
       this.setStatus(this.STATUS.PLAY);
     }
   }
