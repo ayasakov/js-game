@@ -7,7 +7,7 @@ function Game() {
   this.score = 0;
 
   this.snakeHeadColor = '#aa0000';
-  this.snakeBodyColor = '#789';
+  this.snakeBodyColor = '#aaa';
 
   this.status = 1;
   this.STATUS = {
@@ -35,7 +35,7 @@ function Game() {
   // Snake
   this.snake = new Snake(this);
   // Eat
-  this.snake = new Eat(this);
+  this.eat = new Eat(this);
 }
 
 Game.prototype.init = function () {
