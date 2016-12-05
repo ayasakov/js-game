@@ -1,11 +1,15 @@
+"use strict";
+
+var APP = APP || {};
+
 describe("Snake", function() {
   var snake, game;
 
   beforeEach(function() {
     spyOn(document.body, "appendChild");
 
-    game = new Game();
-    snake = new Snake(game);
+    game = new APP.Game();
+    snake = new APP.Snake(game);
   });
 
   it("should be set route", function() {

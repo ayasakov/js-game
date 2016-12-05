@@ -1,6 +1,8 @@
 "use strict";
 
-function Game() {
+var APP = APP || {};
+
+APP.Game = function () {
   this.square = 15;
   this.canvasWidth = 450;
   this.canvasHeight = 450;
@@ -27,22 +29,22 @@ function Game() {
   document.body.appendChild(this.canvas);
 
   this.scaleWidth = Math.ceil(this.canvasWidth / this.square);
-	this.scaleHeight = Math.ceil(this.canvasHeight / this.square);
+  this.scaleHeight = Math.ceil(this.canvasHeight / this.square);
 
   // Context
   this.context = this.canvas.getContext('2d');
 
   // Snake
-  this.snake = new Snake(this);
+  this.snake = new APP.Snake(this);
   // Eat
-  this.eat = new Eat(this);
-}
+  this.eat = new APP.Eat(this);
+};
 
-Game.prototype.init = function () {
+APP.Game.prototype.init = function () {
   this.reset();
 };
 
-Game.prototype.renderScore = function () {
+APP.Game.prototype.renderScore = function () {
   var scoreElement = document.getElementById('scores');
   if (!scoreElement) {
     scoreElement = document.createElement('span');
@@ -53,14 +55,14 @@ Game.prototype.renderScore = function () {
   scoreElement.textContent = 'SCORES: ' + this.score;
 };
 
-Game.prototype.reset = function () {
-  this.snake = new Snake(this);
-  this.eat = new Eat(this);
+APP.Game.prototype.reset = function () {
+  this.snake = new APP.Snake(this);
+  this.eat = new APP.Eat(this);
   this.score = 0;
   this.renderScore();
 };
 
-Game.prototype.drawMessage = function (title, description) {
+APP.Game.prototype.drawMessage = function (title, description) {
   // Background
   this.context.beginPath();
   this.context.fillStyle = 'rgba(0, 0, 0, 0.8)';
@@ -82,15 +84,15 @@ Game.prototype.drawMessage = function (title, description) {
   this.context.fillText(description, this.canvasWidth / 2, this.canvasHeight - 32);
 };
 
-Game.prototype.update = function() {
-	if (this.getStatus() == this.STATUS.PLAY) {
-		this.snake.update();
-	}
+APP.Game.prototype.update = function() {
+  if (this.getStatus() === this.STATUS.PLAY) {
+    this.snake.update();
+  }
 
-  pressKey.isLock = false;
+  APP.shared.pressKey.isLock = false;
 };
 
-Game.prototype.render = function () {
+APP.Game.prototype.render = function () {
   this.context.fillStyle = 'rgba(0, 0, 0, 0.5)';
   this.context.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
 
@@ -119,55 +121,55 @@ Game.prototype.render = function () {
   }
 };
 
-Game.prototype.handlePressKey = function (event) {
-  if (pressKey.isKey('SPACE')) {
-    if (this.getStatus() == this.STATUS.GAME_OVER ||
-      this.getStatus() == this.STATUS.GAME_WIN) {
+APP.Game.prototype.handlePressKey = function (event) {
+  if (APP.shared.pressKey.isKey('SPACE')) {
+    if (this.getStatus() === this.STATUS.GAME_OVER ||
+      this.getStatus() === this.STATUS.GAME_WIN) {
       this.reset();
       this.setStatus(this.STATUS.PLAY);
-    } else if (this.getStatus() == this.STATUS.NONE) {
+    } else if (this.getStatus() === this.STATUS.NONE) {
       this.setStatus(this.STATUS.PLAY);
-    } else if (this.getStatus() == this.STATUS.PAUSE) {
+    } else if (this.getStatus() === this.STATUS.PAUSE) {
       this.setStatus(this.STATUS.PLAY);
-    } else if (this.getStatus() == this.STATUS.PLAY) {
+    } else if (this.getStatus() === this.STATUS.PLAY) {
       this.setStatus(this.STATUS.PAUSE);
     }
   }
 
-  if (pressKey.isKey('SHIFT')) {
-    if (this.getStatus() == this.STATUS.PLAY) {
+  if (APP.shared.pressKey.isKey('SHIFT')) {
+    if (this.getStatus() === this.STATUS.PLAY) {
       this.setStatus(this.STATUS.PAUSE);
-    } else if (this.getStatus() == this.STATUS.PAUSE) {
+    } else if (this.getStatus() === this.STATUS.PAUSE) {
       this.setStatus(this.STATUS.PLAY);
     }
   }
 
-  if (this.getStatus() == this.STATUS.PLAY && !pressKey.isLock) {
-		pressKey.isLock = true;
+  if (this.getStatus() === this.STATUS.PLAY && !APP.shared.pressKey.isLock) {
+    APP.shared.pressKey.isLock = true;
 
-		if (pressKey.isKey('UP') && !this.snake.isRoute('DOWN')) {
-			this.snake.setRoute('UP');
-		} else if (pressKey.isKey('DOWN') && !this.snake.isRoute('UP')) {
-			this.snake.setRoute('DOWN');
-		} else if (pressKey.isKey('LEFT') && !this.snake.isRoute('RIGHT')) {
-			this.snake.setRoute('LEFT');
-		} else if (pressKey.isKey('RIGHT') && !this.snake.isRoute('LEFT')) {
-			this.snake.setRoute('RIGHT');
-		}
-	}
+    if (APP.shared.pressKey.isKey('UP') && !this.snake.isRoute('DOWN')) {
+      this.snake.setRoute('UP');
+    } else if (APP.shared.pressKey.isKey('DOWN') && !this.snake.isRoute('UP')) {
+      this.snake.setRoute('DOWN');
+    } else if (APP.shared.pressKey.isKey('LEFT') && !this.snake.isRoute('RIGHT')) {
+      this.snake.setRoute('LEFT');
+    } else if (APP.shared.pressKey.isKey('RIGHT') && !this.snake.isRoute('LEFT')) {
+      this.snake.setRoute('RIGHT');
+    }
+  }
 };
 
-Game.prototype.setStatus = function(value) {
-	this.onStatusChange(value, this.status);
-	this.status = value;
+APP.Game.prototype.setStatus = function(value) {
+  this.onStatusChange(value, this.status);
+  this.status = value;
 };
 
-Game.prototype.getStatus = function () {
+APP.Game.prototype.getStatus = function () {
   return this.status;
 };
 
-Game.prototype.onStatusChange = function(newstatus, oldstatus) {
-	if (newstatus == this.STATUS.PLAY && oldstatus != this.STATUS.PAUSE) {
-		this.eat.create();
-	}
+APP.Game.prototype.onStatusChange = function(newstatus, oldstatus) {
+  if (newstatus === this.STATUS.PLAY && oldstatus !== this.STATUS.PAUSE) {
+    this.eat.create();
+  }
 };

@@ -1,15 +1,19 @@
-function Snake(game) {
+"use strict";
+
+var APP = APP || {};
+
+APP.Snake = function (game) {
   this.game = game;
 
   var defaultX = Math.ceil(this.game.scaleWidth / 2);
   var defaultY = Math.ceil(this.game.scaleHeight / 2);
 
   this.ROUTE = {
-		UP: 2,
-		DOWN: 0,
-		LEFT: 1,
-		RIGHT: 3
-	};
+    UP: 2,
+    DOWN: 0,
+    LEFT: 1,
+    RIGHT: 3
+  };
 
   this.body = [
     {x: defaultX, y: defaultY - 1},
@@ -18,9 +22,9 @@ function Snake(game) {
   ];
 
   this.setRoute('UP');
-}
+};
 
-Snake.prototype.update = function () {
+APP.Snake.prototype.update = function () {
   var newHeadSnake = {
     x: this.body[0].x,
     y: this.body[0].y
@@ -37,29 +41,29 @@ Snake.prototype.update = function () {
   }
 
   // if on itself
-	for (var i = 0; i < this.getSize() - 1; i++) {
-		if (newHeadSnake.x == this.body[i].x && newHeadSnake.y == this.body[i].y) {
-			this.game.setStatus(this.game.STATUS.GAME_OVER);
-			return;
-		}
-	}
+  for (var i = 0; i < this.getSize() - 1; i++) {
+    if (newHeadSnake.x === this.body[i].x && newHeadSnake.y === this.body[i].y) {
+      this.game.setStatus(this.game.STATUS.GAME_OVER);
+      return;
+    }
+  }
 
-	// if outside scene
-	var isOutsideX = newHeadSnake.x < 0 || newHeadSnake.x > this.game.scaleWidth - 1;
-	var isOutsideY = newHeadSnake.y < 0 || newHeadSnake.y > this.game.scaleHeight - 1;
+  // if outside scene
+  var isOutsideX = newHeadSnake.x < 0 || newHeadSnake.x > this.game.scaleWidth - 1;
+  var isOutsideY = newHeadSnake.y < 0 || newHeadSnake.y > this.game.scaleHeight - 1;
 
-	if (isOutsideX || isOutsideY) {
-		this.game.setStatus(this.game.STATUS.GAME_OVER);
-		return;
-	}
+  if (isOutsideX || isOutsideY) {
+    this.game.setStatus(this.game.STATUS.GAME_OVER);
+    return;
+  }
 
-	// update array
-	this.body.pop();
-	this.body.unshift(newHeadSnake);
+  // update array
+  this.body.pop();
+  this.body.unshift(newHeadSnake);
 
   // Check eat
-  if (newHeadSnake.x == this.game.eat.position.x &&
-    newHeadSnake.y == this.game.eat.position.y) {
+  if (newHeadSnake.x === this.game.eat.position.x &&
+    newHeadSnake.y === this.game.eat.position.y) {
     this.game.score++;
     this.game.renderScore();
 
@@ -74,9 +78,9 @@ Snake.prototype.update = function () {
 
 };
 
-Snake.prototype.render = function () {
+APP.Snake.prototype.render = function () {
   for (var i = this.getSize() - 1; i != -1; i--) {
-    if (i == 0) {
+    if (i === 0) {
       this.game.context.fillStyle = this.game.snakeHeadColor;
     } else {
       this.game.context.fillStyle = this.game.snakeBodyColor;
@@ -88,19 +92,19 @@ Snake.prototype.render = function () {
   }
 };
 
-Snake.prototype.getSize = function () {
+APP.Snake.prototype.getSize = function () {
   return this.body.length;
 };
 
-Snake.prototype.setRoute = function(value) {
-	this.route = this.ROUTE[value];
+APP.Snake.prototype.setRoute = function(value) {
+  this.route = this.ROUTE[value];
 };
 
-Snake.prototype.isRoute = function(value) {
-	return this.route == this.ROUTE[value];
+APP.Snake.prototype.isRoute = function(value) {
+  return this.route === this.ROUTE[value];
 };
 
-Snake.prototype.addElement = function () {
+APP.Snake.prototype.addElement = function () {
   var lastEl = this.body.length - 1,
       newEl = {
         x: this.body[lastEl].x,
@@ -121,7 +125,7 @@ Snake.prototype.addElement = function () {
 
   this.body.push(newEl);
 
-  if (this.getSize() == this.game.scaleWidth * this.game.scaleHeight) {
+  if (this.getSize() === this.game.scaleWidth * this.game.scaleHeight) {
     return true;
   }
 

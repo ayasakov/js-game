@@ -1,9 +1,13 @@
+"use strict";
+
+var APP = APP || {};
+
 describe("Game", function() {
   var game;
 
   beforeEach(function() {
     spyOn(document.body, "appendChild");
-    game = new Game();
+    game = new APP.Game();
   });
 
   it("should prepare game board", function() {

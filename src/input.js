@@ -1,7 +1,9 @@
 "use strict";
 
+var APP = APP || {};
+
 (function () {
-  var keys = {
+  var KEYS = {
     SPACE: 32,
     SHIFT: 16,
     LEFT: 37,
@@ -12,15 +14,16 @@
 
   function isKey(key) {
     var code;
-    if (typeof keys[key] !== 'undefined') {
-      code = keys[key];
+    if (typeof KEYS[key] !== 'undefined') {
+      code = KEYS[key];
     } else {
       code = key.charCodeAt(0);
     }
-    return (event.keyCode == code);
+    return (event.keyCode === code);
   }
 
-  window.pressKey = {
+  APP.shared = APP.shared || {};
+  APP.shared.pressKey = {
     isKey: function (key) {
       return isKey(key.toUpperCase());
     },

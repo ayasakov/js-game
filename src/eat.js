@@ -1,20 +1,24 @@
-function Eat(game) {
+"use strict";
+
+var APP = APP || {};
+
+APP.Eat = function (game) {
   this.game = game;
 
   this.position = {
     x: -1,
     y: -1
   }
-}
+};
 
-Eat.prototype.remove = function () {
+APP.Eat.prototype.remove = function () {
   this.position = {
     x: -1,
     y: -1
   }
 };
 
-Eat.prototype.create = function () {
+APP.Eat.prototype.create = function () {
   var newPosition = {
     x: Math.floor(Math.random() * this.game.scaleWidth),
     y: Math.floor(Math.random() * this.game.scaleHeight)
@@ -37,7 +41,7 @@ Eat.prototype.create = function () {
   this.position.y = newPosition.y;
 };
 
-Eat.prototype.render = function () {
+APP.Eat.prototype.render = function () {
   if (this.position.x != -1 && this.position.y != -1) {
     this.game.context.beginPath();
     this.game.context.fillStyle = '#00aa00';

@@ -1,3 +1,7 @@
+"use strict";
+
+var APP = APP || {};
+
 describe("Eat", function() {
   var eat, game,
       defaultPosition = {
@@ -9,8 +13,8 @@ describe("Eat", function() {
     // Mock append
     spyOn(document.body, "appendChild");
 
-    game = new Game();
-    eat = new Eat(game);
+    game = new APP.Game();
+    eat = new APP.Eat(game);
   });
 
   it("should init with (-1; -1)", function() {
