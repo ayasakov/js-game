@@ -42,13 +42,5 @@ APP.Eat.prototype.create = function () {
 };
 
 APP.Eat.prototype.render = function () {
-  if (this.position.x != -1 && this.position.y != -1) {
-    this.game.context.beginPath();
-    this.game.context.fillStyle = '#00aa00';
-    this.game.context.arc(this.position.x * this.game.square + this.game.square / 2,
-      this.position.y * this.game.square + this.game.square / 2,
-      this.game.square / 2 - 2, 0, Math.PI * 2);
-    this.game.context.fill();
-    this.game.context.closePath();
-  }
+  APP.View.prototype.renderEat.apply(this);
 };

@@ -3,14 +3,9 @@
 var APP = APP || {};
 
 APP.Game = function () {
-  this.square = 15;
-  this.canvasWidth = 450;
-  this.canvasHeight = 450;
+  APP.View.apply(this);
+
   this.score = 0;
-
-  this.snakeHeadColor = '#aa0000';
-  this.snakeBodyColor = '#aaa';
-
   this.status = 1;
   this.STATUS = {
     NONE: 1,
@@ -20,39 +15,16 @@ APP.Game = function () {
     PAUSE: 5
   };
 
-  // Canvas
-  this.canvas = document.createElement('canvas');
-  this.canvas.width = this.canvasWidth;
-  this.canvas.height = this.canvasHeight;
-  this.canvas.style.border = '5px solid #333';
-
-  document.body.appendChild(this.canvas);
-
-  this.scaleWidth = Math.ceil(this.canvasWidth / this.square);
-  this.scaleHeight = Math.ceil(this.canvasHeight / this.square);
-
-  // Context
-  this.context = this.canvas.getContext('2d');
-
   // Snake
   this.snake = new APP.Snake(this);
   // Eat
   this.eat = new APP.Eat(this);
 };
 
+APP.Game.prototype = Object.create(APP.View.prototype);
+
 APP.Game.prototype.init = function () {
   this.reset();
-};
-
-APP.Game.prototype.renderScore = function () {
-  var scoreElement = document.getElementById('scores');
-  if (!scoreElement) {
-    scoreElement = document.createElement('span');
-    scoreElement.id = 'scores';
-    document.body.appendChild(document.createElement('br'));
-    document.body.appendChild(scoreElement);
-  }
-  scoreElement.textContent = 'SCORES: ' + this.score;
 };
 
 APP.Game.prototype.reset = function () {
@@ -60,28 +32,6 @@ APP.Game.prototype.reset = function () {
   this.eat = new APP.Eat(this);
   this.score = 0;
   this.renderScore();
-};
-
-APP.Game.prototype.drawMessage = function (title, description) {
-  // Background
-  this.context.beginPath();
-  this.context.fillStyle = 'rgba(0, 0, 0, 0.8)';
-  this.context.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
-  this.context.closePath();
-
-  // Title
-  this.context.beginPath();
-  this.context.font = '32px Arial monospace';
-  this.context.fillStyle = '#aa0000';
-  this.context.textAlign = 'center';
-  this.context.fillText(title, this.canvasWidth / 2, this.canvasHeight / 2);
-
-  // Description
-  this.context.beginPath();
-  this.context.font = '14px Arial monospace';
-  this.context.fillStyle = '#aa0000';
-  this.context.textAlign = 'center';
-  this.context.fillText(description, this.canvasWidth / 2, this.canvasHeight - 32);
 };
 
 APP.Game.prototype.update = function() {
@@ -93,8 +43,7 @@ APP.Game.prototype.update = function() {
 };
 
 APP.Game.prototype.render = function () {
-  this.context.fillStyle = 'rgba(0, 0, 0, 0.5)';
-  this.context.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
+  this.clearField();
 
   this.snake.render();
   this.eat.render();

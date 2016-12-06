@@ -79,17 +79,7 @@ APP.Snake.prototype.update = function () {
 };
 
 APP.Snake.prototype.render = function () {
-  for (var i = this.getSize() - 1; i != -1; i--) {
-    if (i === 0) {
-      this.game.context.fillStyle = this.game.snakeHeadColor;
-    } else {
-      this.game.context.fillStyle = this.game.snakeBodyColor;
-    }
-
-    this.game.context.fillRect(this.body[i].x * this.game.square + 1,
-      this.body[i].y * this.game.square + 1,
-      this.game.square - 2, this.game.square - 2);
-  }
+  APP.View.prototype.renderSnake.apply(this);
 };
 
 APP.Snake.prototype.getSize = function () {

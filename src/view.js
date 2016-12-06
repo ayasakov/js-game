@@ -16,6 +16,11 @@ APP.View = function () {
   this.canvas.height = this.canvasHeight;
   this.canvas.style.border = '5px solid #333';
 
+  document.body.appendChild(this.canvas);
+
+  this.scaleWidth = Math.ceil(this.canvasWidth / this.square);
+  this.scaleHeight = Math.ceil(this.canvasHeight / this.square);
+
   // Context
   this.context = this.canvas.getContext('2d');
 };
@@ -45,6 +50,17 @@ APP.View.prototype.drawMessage = function (title, description) {
   this.context.fillStyle = '#aa0000';
   this.context.textAlign = 'center';
   this.context.fillText(description, this.canvasWidth / 2, this.canvasHeight - 32);
+};
+
+APP.View.prototype.renderScore = function () {
+  var scoreElement = document.getElementById('scores');
+  if (!scoreElement) {
+    scoreElement = document.createElement('span');
+    scoreElement.id = 'scores';
+    document.body.appendChild(document.createElement('br'));
+    document.body.appendChild(scoreElement);
+  }
+  scoreElement.textContent = 'SCORES: ' + this.score;
 };
 
 APP.View.prototype.renderEat = function () {
